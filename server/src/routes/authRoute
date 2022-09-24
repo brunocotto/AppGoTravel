@@ -1,0 +1,10 @@
+const router = require("express").Router();
+
+// importa o controller
+const authController = require('../controllers/authController')
+
+// Register User
+router.post("/register", authController.register)
+
+// Exportando as rotas
+module.exports = router
