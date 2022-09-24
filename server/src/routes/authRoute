@@ -3,14 +3,11 @@ const router = require("express").Router();
 // importa o controller
 const authController = require('../controllers/authController')
 
-// Private Route - Middleware de Verificação do token "checkTokenUser"
-router.get("/users/:id", authController.checkUserID)
-
 // Register User
 router.post("/register", authController.register)
 
 // Login User
-router.post("/login", authController.login)
+router.post("/authenticate", authController.authenticate)
 
 // Exportando as rotas
 module.exports = router

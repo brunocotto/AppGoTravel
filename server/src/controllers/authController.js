@@ -3,20 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require("dotenv").config({path:"./.env"})
 
-exports.checkUserID = async(req, res) => {
-    const id = req.params.id
-
-    //check if user exists
-    const user = await User.findById(id, '-password')
-
-    if(!user) {
-        res.status(404).json({ msg: 'User not a found.' });
-        return
-    }
-
-    res.status(200).json({ user });
-}
-
 //funcão registro de usuários
 exports.register = async (req, res) => {
     //desestructured
@@ -67,7 +53,7 @@ exports.register = async (req, res) => {
     }
 };
 
-exports.login = async (req, res) => {
+exports.authenticate = async (req, res) => {
     const { email, password } = req.body;
 
     // validations
@@ -80,29 +66,28 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email: email }).select('+password')
 
     if (!user) {
-        res.status(422).json({ message: 'User not a found.' });
+        res.status(422).json({ error: 'User not a found.' });
         return
     }
 
     // check if password match
-    const checkPassword = await bcrypt.compare(password, user.password)
-
-    if (!checkPassword) {
-        res.status(422).json({ error: 'Password invalid.' });
+    if (!await bcrypt.compare(password, user.password)) {
+        res.status(422).json({ error: 'Invalid password.' });
         return
     }
+
+    user.password = undefined;
 
     try {
         const secret = process.env.SECRET;
 
-        const token = jwt.sign(
-            {
-                id: user._id,
-            },
-            secret,
-        )
+        const token = jwt.sign({ id: user._id, }, secret, {
+            //expira em um dia
+            expiresIn: 86400,
+    });
 
-        res.status(200).json({ message: 'Authentication performed successfully.', token });
+        //res.status(200).json({ message: 'Authentication performed successfully.', token });
+        res.send({ user, token })
     } catch (error) {
         console.log(error)
 

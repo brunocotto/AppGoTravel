@@ -15,5 +15,9 @@ app.use(bodyParser.json());
 const authRoute = require("./routes/authRoute")
 app.use("/auth", authRoute)
 
+// rota de projeto
+const projectRoute = require("./routes/projectRoute")
+app.use("/projects", projectRoute)
+
 app.listen(3000)
 
