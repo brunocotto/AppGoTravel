@@ -2,7 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto')
-const mailer = require('../modules/mailer')
+const transport = require('../modules/mailer');
 require("dotenv").config({path:"./.env"})
 
 //gera token
@@ -120,7 +120,7 @@ exports.forgot_password = async (req, res) => {
         return
     }
 
-    //criado um token ramdomico de 20 carac hexa
+    //criado um token ramdomico
     const token = crypto.randomBytes(20).toString('hex')
 
     //configuração do tempo de expiração. 1 hora após a criação
@@ -132,25 +132,18 @@ exports.forgot_password = async (req, res) => {
             passwordResetToken: token,
             passwordResetExpires: now,
         }
-    })
+    });
 
-    mailer.sendMail({
+    transport.sendMail({
         to: email,
-        from: 'bruno16@gotravel.com.br',
-        template:'../modules/forgot_password',
+        from: 'bruno@gotravel.com.br',
+        template:'auth/forgot_password',
         context: { token },
     }, (err) => {
-        if(err) {
+        if(err){ 
+            console.log(err)
             return res.status(400).send({ error: 'Cannot send forgot password email.' })
-        return res.send(200)
-        }     
-    })
-
-    try {
-       
-        
-    } catch (error) {
-        res.status(400).send({ error: 'Erro on forgot password.' })
-    }
-
+        }
+        return res.send(200);          
+    });
 }

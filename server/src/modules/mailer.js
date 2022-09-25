@@ -1,23 +1,34 @@
-const path = require('path')
+const path = require('path');
 const nodemailer = require('nodemailer');
-const { host, port, user, pass } = require("dotenv").config({path:"./.env"});
+
+//destruturando arquivo de config
+const { host, port, user, pass } = require('../config/mail.json');
+
 //permite o trabalho com templates de emails
 const hbs = require('nodemailer-express-handlebars');
 
-//nodemailer configuration - padrão https://mailtrap.io/
+//transport route configuration
 const transport = nodemailer.createTransport({
     host,
     port,
-    auth: { user, pass }
-  });
+//  logger: true,
+//  debug: true,
+    auth: {
+        user,
+        pass,
+    },
+});
 
-  transport.use('compile', hbs({
-    //padrão handlebars
-    viewEngine: 'handlebars',
-    //onde ficam as views de template de email
+const handlebarOptions = {
+    viewEngine: {
+        extName: ".html",
+        partialsDir: path.resolve('./src/resources/mail'),
+        defaultLayout: false,
+    },
     viewPath: path.resolve('./src/resources/mail'),
-    //extensão
-    extName: '.html'
-  }))
+    extName: ".html",
+};
 
-  module.exports = transport;
+transport.use('compile', hbs(handlebarOptions));
+
+module.exports = transport;

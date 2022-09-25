@@ -1,7 +1,4 @@
 
-const router = require('../routes/authRoute');
-
-
 
 exports.teste = async (req, res) => {
     //como o user id foi usado no req do middleware
