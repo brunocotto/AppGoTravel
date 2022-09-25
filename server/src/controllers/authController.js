@@ -1,7 +1,19 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto')
+const mailer = require('../modules/mailer')
 require("dotenv").config({path:"./.env"})
+
+//gera token
+function generateToken(params = {}) {
+    const secret = process.env.SECRET;
+
+    return jwt.sign(params, secret, {
+        //expira em um dia
+        expiresIn: 86400,
+    });   
+};
 
 //funcão registro de usuários
 exports.register = async (req, res) => {
@@ -10,22 +22,23 @@ exports.register = async (req, res) => {
 
     // validations
     if (!name) {
-        res.status(422).json({ error: 'Name is required.' });
+        res.status(400).json({ error: 'Name is required.' });
         return
     }
 
     if (!email) {
-        res.status(422).json({ error: 'Email is required.' });
+        res.status(400).json({ error: 'Email is required.' });
         return
     }
 
     if (!password) {
-        res.status(422).json({ error: 'Password is required.' });
+        res.status(400).json({ error: 'Password is required.' });
         return
     }
     //o user já existe?
     if (await User.findOne({ email: email })) {
-        res.status(422).json({ msg: 'User already exists.' });
+        //A requisição está bem formada mas inabilitada para ser seguida devido a erros semânticos.
+        res.status(200).json({ msg: 'User already exists.' });
         return
     }
 
@@ -44,8 +57,14 @@ exports.register = async (req, res) => {
     try {
         await user.save()
 
+        //não retornoo password
+        user.password = undefined;
+
         //res.status(201).json({ message: 'User created successfully.' });
-        res.send({ user });
+        res.send({ 
+            user,
+            token: generateToken({ id: user._id })
+         });
     } catch (error) {
         console.log(error)
 
@@ -58,7 +77,7 @@ exports.authenticate = async (req, res) => {
 
     // validations
     if (!email || !password) {
-        res.status(422).json({ error: 'Email or password is invalid.' });
+        res.status(400).json({ error: 'Email or password is invalid.' });
         return
     }
 
@@ -66,34 +85,72 @@ exports.authenticate = async (req, res) => {
     const user = await User.findOne({ email: email }).select('+password')
 
     if (!user) {
-        res.status(422).json({ error: 'User not a found.' });
+        res.status(400).json({ error: 'User not a found.' });
         return
     }
 
     // check if password match
     if (!await bcrypt.compare(password, user.password)) {
-        res.status(422).json({ error: 'Invalid password.' });
+        res.status(400).json({ error: 'Invalid password.' });
         return
     }
 
     user.password = undefined;
 
     try {
-        const secret = process.env.SECRET;
-
-        const token = jwt.sign({ id: user._id, }, secret, {
-            //expira em um dia
-            expiresIn: 86400,
-    });
-
-        //res.status(200).json({ message: 'Authentication performed successfully.', token });
-        res.send({ user, token })
+        res.status(200).json({ 
+            user,
+            token: generateToken({ id: user._id })
+         });
     } catch (error) {
         console.log(error)
 
-        res
-            .status(500)
-            .json({ msg: error })
+        res.status(500).json({ msg: error })
+    }
+
+}
+
+exports.forgot_password = async (req, res) => {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email })
+
+    if(!user) {
+        res.status(400).json({ error: 'User not a found.' });
+        return
+    }
+
+    //criado um token ramdomico de 20 carac hexa
+    const token = crypto.randomBytes(20).toString('hex')
+
+    //configuração do tempo de expiração. 1 hora após a criação
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+
+    await User.findByIdAndUpdate(user.id, {
+        '$set': {
+            passwordResetToken: token,
+            passwordResetExpires: now,
+        }
+    })
+
+    mailer.sendMail({
+        to: email,
+        from: 'bruno16@gotravel.com.br',
+        template:'../modules/forgot_password',
+        context: { token },
+    }, (err) => {
+        if(err) {
+            return res.status(400).send({ error: 'Cannot send forgot password email.' })
+        return res.send(200)
+        }     
+    })
+
+    try {
+       
+        
+    } catch (error) {
+        res.status(400).send({ error: 'Erro on forgot password.' })
     }
 
 }

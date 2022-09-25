@@ -9,5 +9,8 @@ router.post("/register", authController.register)
 // Login User
 router.post("/authenticate", authController.authenticate)
 
+// Forgot Password
+router.post("/forgot_password", authController.forgot_password)
+
 // Exportando as rotas
 module.exports = router
