@@ -127,7 +127,7 @@ exports.forgot_password = async (req, res) => {
     const now = new Date();
     now.setHours(now.getHours() + 1);
 
-    await User.findByIdAndUpdate(user.id, {
+    await User.findByIdAndUpdate(user._id, {
         '$set': {
             passwordResetToken: token,
             passwordResetExpires: now,
@@ -146,4 +146,39 @@ exports.forgot_password = async (req, res) => {
         }
         return res.send(200);          
     });
+}
+
+exports.reset_password = async (req, res) => {
+    const { email, token, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email })
+        //apenas nessse ponto adiciona passwordResetToken e passwordResetExpires
+        //config do próprio mongoose 
+        .select('+passwordResetToken passwordResetExpires');
+
+        if(!user) {
+            res.status(400).json({ error: 'User not a found.' });
+            return
+        };
+        // verifica se o token = token no passwordResetToken
+        if(token !== user.passwordResetToken) {
+            return res.status(400).send({ error: 'Token invalid.' });
+        };
+        // verifica se o token expirou
+        const now = new Date()
+        if (now > user.passwordResetExpires) {
+            return res.status(400).send({ error: 'Token expired.' });
+        };
+
+        //altera o password
+        user.password = password;
+
+        await user.save();
+
+        res.send(200)
+        
+    } catch (error) {
+       return res.status(400).send({ error: 'Cannot send forgot password email.' });
+    };
 }
