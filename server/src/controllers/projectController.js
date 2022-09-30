@@ -1,8 +1,19 @@
+const express = require('express');
+const Travel = require('..models/Travel');
+const Task = require('..models/Task');
 
+exports.listTravel = async (req, res) => {
+    res.send({ user: req.userId });
+}
 
-exports.teste = async (req, res) => {
-    //como o user id foi usado no req do middleware
-    //req.userId = decoded.id; return next()
-    // agora posso obtê-lo aqui! diretamente do token..
-    res.send({ ok: true, user: req.userId });
+exports.listTravelId = async (req, res) => {
+    res.send({ user: req.userId });
+}
+
+exports.createTravel = async (req, res) => {
+    res.send({ user: req.userId });
+}
+
+exports.updateTravelId = async (req, res) => {
+    res.send({ user: req.userId });
 }
