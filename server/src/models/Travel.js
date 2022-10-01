@@ -2,12 +2,14 @@ const mongoose = require('../database/connection');
 
 //schema/model Travel mongoDB
 const TravelSchema = new mongoose.Schema({
-    tile: {
+    title: {
         type: String,
         require: true,
     },
     description: {
         type: String,
+
+        
         require: true,
 
     },

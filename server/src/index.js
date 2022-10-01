@@ -16,8 +16,8 @@ const authRoute = require("./routes/authRoute")
 app.use("/auth", authRoute)
 
 // rota de projeto
-const projectRoute = require("./routes/projectRoute")
-app.use("/projects", projectRoute)
+const travelRoute = require("./routes/travelRoute")
+app.use("/travel", travelRoute)
 
 app.listen(3000)
 
