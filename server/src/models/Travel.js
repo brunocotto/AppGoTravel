@@ -8,10 +8,11 @@ const TravelSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-
-        
         require: true,
-
+    },
+    destiny: {
+        type: String, 
+        require: true,
     },
     //A viagem pertence a um user
     user: {
