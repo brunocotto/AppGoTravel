@@ -6,9 +6,9 @@ exports.listTravel = async (req, res) => {
     try {
         const travels = await Travel.find();
 
-        return res.send({ travels });
+        return res.status(200).json({ travels });
     } catch (error) {
-        return res.status(400).send({ error: 'Error loading travels' })
+        return res.status(400).json({ error: 'Error loading travels' })
     }
 }
 
