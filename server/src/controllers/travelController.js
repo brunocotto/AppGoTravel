@@ -37,9 +37,21 @@ exports.createTravel = async (req, res) => {
 }
 
 exports.updateTravelId = async (req, res) => {
-    res.send({ user: req.userId });
+    try {
+        const travel = await Travel.findByIdAndUpdate(req.params.travelId);
+
+        return res.status(200).json({ travel });
+    } catch (error) {
+        return res.status(400).json({ error: 'Error loading travel.' })
+    }
 }
 
 exports.deleteTravelId = async (req, res) => {
-    res.send({ user: req.userId });
+    try {
+        await Travel.findByIdAndRemove(req.params.travelId);
+
+        return res.status(200).json({ message: 'Travel removed successfully.' });
+    } catch (error) {
+        return res.status(400).json({ error: 'Error deleting travel.' })
+    }
 }

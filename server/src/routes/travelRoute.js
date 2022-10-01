@@ -11,16 +11,16 @@ router.use(authMiddleware);
 router.get("/", travelController.listTravel)
 
 // rota para listagem de tarefas por ID
-router.get("/:TravelId", travelController.listTravelId)
+router.get("/:travelId", travelController.listTravelId)
 
 // rota para criar uma nova viagem
 router.post("/", travelController.createTravel)
 
 // rota para atualizar uma viagem por ID
-router.put("/:TravelId", travelController.updateTravelId)
+router.put("/:travelId", travelController.updateTravelId)
 
 // rota para deletar uma viagem por ID
-router.delete("/:TravelId", travelController.updateTravelId)
+router.delete("/:travelId", travelController.deleteTravelId)
 
 // Exportando as rotas
 module.exports = router
