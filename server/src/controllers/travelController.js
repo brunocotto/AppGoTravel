@@ -48,9 +48,9 @@ exports.createTravel = async (req, res) => {
         //como foram adicionadas novas tasks a viagem, é preciso dar um save()
         await travel.save();
 
-        return res.json({ travel });
+        return res.status(200).json({ travel });
     } catch (error) {
-        return res.status(400).send({ error: 'Error creating new travel.' })
+        return res.status(400).json({ error: 'Error creating new travel.' })
     };
 };
 
@@ -82,7 +82,7 @@ exports.updateTravelId = async (req, res) => {
   
         await travel.save();
 
-        return res.json({ travel });
+        return res.status(200).json({ travel });
     } catch (error) {
         return res.status(400).send({ error: 'Error updating travel.' })
     };

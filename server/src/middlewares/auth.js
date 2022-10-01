@@ -11,13 +11,15 @@ module.exports = (req, res, next) => {
     //Authorization: Bearer <token>
     const authHeader = req.headers.authorization;
 
-    if(!authHeader)
+    if(!authHeader) {
         return res.status(401).send({ error: 'No token provided.' });
+    }
 
     const parts = authHeader.split(' ');
 
-    if(!parts.lenght === 2)
+    if(!parts.lenght === 2) {
         return res.status(401).send({ error: 'Token error.' });
+    }
     
     const [ scheme, token ] = parts;
 

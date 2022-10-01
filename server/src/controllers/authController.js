@@ -37,7 +37,7 @@ exports.register = async (req, res) => {
     }
     //o user já existe?
     if (await User.findOne({ email: email })) {
-        //A requisição está bem formada mas inabilitada para ser seguida devido a erros semânticos.
+        //A requisição está bem formada.
         res.status(200).json({ msg: 'User already exists.' });
         return
     }
@@ -141,8 +141,8 @@ exports.forgot_password = async (req, res) => {
         context: { token },
     }, (err) => {
         if(err){ 
-            console.log(err)
-            return res.status(400).send({ error: 'Cannot send forgot password email.' })
+        //  console.log(err)
+            return res.status(401).send({ error: 'Cannot send forgot password or email.' })
         }
         return res.send(200);          
     });
