@@ -57,11 +57,11 @@ exports.register = async (req, res) => {
     try {
         await user.save()
 
-        //não retornoo password
+        //não retorna o password
         user.password = undefined;
 
         //res.status(201).json({ message: 'User created successfully.' });
-        res.send({ 
+        res.json({ 
             user,
             token: generateToken({ id: user._id })
          });
