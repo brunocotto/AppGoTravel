@@ -142,7 +142,7 @@ exports.forgot_password = async (req, res) => {
     }, (err) => {
         if(err){ 
         //  console.log(err)
-            return res.status(401).send({ error: 'Cannot send forgot password or email.' })
+            return res.status(401).json({ error: 'Cannot send forgot password or email.' })
         }
         return res.send(200);          
     });
@@ -163,12 +163,12 @@ exports.reset_password = async (req, res) => {
         };
         // verifica se o token = token no passwordResetToken
         if(token !== user.passwordResetToken) {
-            return res.status(400).send({ error: 'Token invalid.' });
+            return res.status(400).json({ error: 'Token invalid.' });
         };
         // verifica se o token expirou
         const now = new Date()
         if (now > user.passwordResetExpires) {
-            return res.status(400).send({ error: 'Token expired.' });
+            return res.status(400).json({ error: 'Token expired.' });
         };
 
         //altera o password
@@ -179,6 +179,6 @@ exports.reset_password = async (req, res) => {
         res.send(200)
         
     } catch (error) {
-       return res.status(400).send({ error: 'Cannot send forgot password email.' });
+       return res.status(400).json({ error: 'Cannot send forgot password email.' });
     };
 }
