@@ -1,7 +1,8 @@
 # AppGoTravel
 
 # Desenvolvimento da API
-|* Conexão a banco MongoDB cloud com Atlas
+
+* Conexão a banco MongoDB cloud com Atlas
 [] Criação de model/schema MongoDb com mongoose
 [] Controle de usuários(register, authenticate)
 [] Autenticação com JWT
