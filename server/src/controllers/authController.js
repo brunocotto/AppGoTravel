@@ -38,7 +38,7 @@ exports.register = async (req, res) => {
     //o user já existe?
     if (await User.findOne({ email: email })) {
         //A requisição está bem formada.
-        res.status(200).json({ msg: 'User already exists.' });
+        res.status(400).json({ msg: 'User already exists.' });
         return
     }
 
@@ -81,7 +81,7 @@ exports.authenticate = async (req, res) => {
         return
     }
 
-    // check if user exists envio o password apenas para checkar as if password:password
+    // check if user existe, envio o password apenas para checkar as if password:password
     const user = await User.findOne({ email: email }).select('+password')
 
     if (!user) {
