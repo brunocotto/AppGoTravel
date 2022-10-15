@@ -5,7 +5,7 @@ exports.listTravel = async (req, res) => {
     try {
         //O Método find retorna uma array com todos os documentos que foram encontrados
         //populate(), permite fazer referência a documentos em outras collections
-        //nesse caso busquei todos os dados da collection user
+        //nesse caso busquei os dados da collection user
         const travels = await Travel.find().populate(['user', 'tasks']);
         //se tudo ocorrer bem, retorna um json das viagens cadastradas
         return res.status(200).json({ travels });

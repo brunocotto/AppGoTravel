@@ -122,6 +122,8 @@ exports.forgot_password = async (req, res) => {
 
     //criado um token ramdomico
     const token = crypto.randomBytes(20).toString('hex')
+    0
+    
 
     //configuração do tempo de expiração. 1 hora após a criação
     const now = new Date();
@@ -135,8 +137,9 @@ exports.forgot_password = async (req, res) => {
     });
 
     transport.sendMail({
+        title: 'Testando Recuperação de Senha',
         to: email,
-        from: 'bruno@gotravel.com.br',
+        from: 'Profs@gotravel.com.br',
         template:'auth/forgot_password',
         context: { token },
     }, (err) => {

@@ -16,14 +16,6 @@ const authRoute = require("./routes/authRoute")
 app.use("/auth", authRoute)
 
 // rota de viagens
-const permissionRoute = require("./routes/permissionRoute")
-app.use("/permission", permissionRoute)
-
-// rota de permissões(permissions)
-const travelRoute = require("./routes/travelRoute")
-app.use("/travel", travelRoute)
-
-// rota de papéis(roles)
 const travelRoute = require("./routes/travelRoute")
 app.use("/travel", travelRoute)
 
