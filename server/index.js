@@ -12,11 +12,11 @@ app.use(
 app.use(bodyParser.json());
 
 // rota de autenticação
-const authRoute = require("./routes/authRoute")
+const authRoute = require("./src/routes/authRoute")
 app.use("/auth", authRoute)
 
 // rota de viagens
-const travelRoute = require("./routes/travelRoute")
+const travelRoute = require("./src/routes/travelRoute")
 app.use("/travel", travelRoute)
 
 app.listen(3000)
