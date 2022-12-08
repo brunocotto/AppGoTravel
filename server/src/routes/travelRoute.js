@@ -14,7 +14,7 @@ router.get("/", travelController.listTravel)
 router.get("/:travelId", travelController.listTravelId)
 
 // rota para criar uma nova viagem
-router.post("/", travelController.createTravel)
+router.post("/create", travelController.createTravel)
 
 // rota para atualizar uma viagem por ID
 router.patch("/:travelId", travelController.updateTravelId)

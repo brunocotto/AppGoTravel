@@ -23,11 +23,11 @@ const TravelSchema = new mongoose.Schema({
         //a relação é obrigatória
         require: true,
     },
-    tasks: [{
-        type: mongoose.Schema.Types.ObjectId,
+    //tasks: [{
+    //    type: mongoose.Schema.Types.ObjectId,
         //define com qual schema a relação é feita
-        ref: 'Task'
-    }],
+     //   ref: 'Task'
+    //}],
     createdAt: {
         type: Date,
         default: Date.now,

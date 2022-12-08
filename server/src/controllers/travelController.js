@@ -6,7 +6,8 @@ exports.listTravel = async (req, res) => {
         //O Método find retorna uma array com todos os documentos que foram encontrados
         //populate(), permite fazer referência a documentos em outras collections
         //nesse caso busquei os dados da collection user
-        const travels = await Travel.find().populate(['user', 'tasks']);
+        //const travels = await Travel.find().populate(['user', 'tasks']);
+        const travels = await Travel.find();
         //se tudo ocorrer bem, retorna um json das viagens cadastradas
         return res.status(200).json({ travels });
     } catch (error) {
@@ -26,7 +27,8 @@ exports.listTravelId = async (req, res) => {
 
 exports.createTravel = async (req, res) => {
     try { 
-        const { title, description, destiny, tasks } = req.body;
+        //const { title, description, destiny, tasks } = req.body;
+        const { title, description, destiny } = req.body;
 
         //adicionando o usuário que criou a viagem pegando o userId que vem através do token
         //preenchido pelo middleware de auth
@@ -34,17 +36,17 @@ exports.createTravel = async (req, res) => {
 
         //criando, percorrendo cada uma das tarefas e atribuindo a viagem...
         //Promisse.all = aguarda todas as promisses serem executadas
-        await Promise.all(tasks.map( async task => {
+        //await Promise.all(tasks.map( async task => {
 
             //Task.create = cria e já salva, new Task = cria mas ainda não salva
             //insiro todos os campos da task(...task), como é uma relação nx1 referencio o id da viagem
-            const travelTask = new Task({ ...task, travel: travel._id });
+        //    const travelTask = new Task({ ...task, travel: travel._id });
 
             //save async, retorna uma promisse.. utilizando um callback para obter os dados da task
-            await travelTask.save(); 
+         //   await travelTask.save(); 
             
-            travel.tasks.push(travelTask);
-        }));
+          //  travel.tasks.push(travelTask);
+        //}));
         //como foram adicionadas novas tasks a viagem, é preciso dar um save()
         await travel.save();
 
