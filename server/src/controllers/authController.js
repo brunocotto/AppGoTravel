@@ -72,7 +72,7 @@ exports.register = async (req, res) => {
     }
 };
 
-exports.authenticate = async (req, res) => {
+exports.authenticate = async (req, res) => { 
     const { email, password } = req.body;
 
     // validations

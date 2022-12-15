@@ -2,6 +2,7 @@ const Travel = require('../models/Travel');
 const Task = require('../models/Task');
 
 exports.listTravel = async (req, res) => {
+    const { user } = req.body;
     try {
         //O Método find retorna uma array com todos os documentos que foram encontrados
         //populate(), permite fazer referência a documentos em outras collections
@@ -9,7 +10,8 @@ exports.listTravel = async (req, res) => {
         //const travels = await Travel.find().populate(['user', 'tasks']);
         const travels = await Travel.find();
         //se tudo ocorrer bem, retorna um json das viagens cadastradas
-        return res.status(200).json({ travels });
+        //decidi retornar apenas um objeto ao invés de json, mat-table aceita
+        return res.status(200).json(travels);
     } catch (error) {
         return res.status(400).json({ error: 'Error loading travels.' })
     }
@@ -17,9 +19,10 @@ exports.listTravel = async (req, res) => {
 
 exports.listTravelId = async (req, res) => {
     try {
-        const travel = await Travel.findById(req.params.travelId).populate(['user', 'tasks']);
+        //const travel = await Travel.findById(req.params.travelId).populate(['user', 'tasks']);
+        const travel = await Travel.findById(req.params.travelId).populate(['user']);
 
-        return res.status(200).json({ travel });
+        return res.status(200).json(travel);
     } catch (error) {
         return res.status(400).json({ error: 'Error loading travel.' })
     }
@@ -57,8 +60,9 @@ exports.createTravel = async (req, res) => {
 };
 
 exports.updateTravelId = async (req, res) => {
-    try { 
-        const { title, description, destiny, tasks } = req.body;
+    try {
+        //const { title, description, destiny, tasks } = req.body; 
+        const { title, description, destiny } = req.body;
 
         const travel = await Travel.findByIdAndUpdate(req.params.travelId, {
             title, 
@@ -69,18 +73,18 @@ exports.updateTravelId = async (req, res) => {
         }, { new: true });
 
         //deletando as tasks associadas ao projeto antes de cria-las novamente
-        travel.tasks = [];
-        await Task.remove({ travel: travel._id });
+        //travel.tasks = [];
+        //await Task.remove({ travel: travel._id });
 
         //cria novamente
-        await Promise.all(tasks.map( async task => {
+        //await Promise.all(tasks.map( async task => {
 
-            const travelTask = new Task({ ...task, travel: travel._id });
+        //    const travelTask = new Task({ ...task, travel: travel._id });
 
-            await travelTask.save(); 
+        //   await travelTask.save(); 
             
-            travel.tasks.push(travelTask);
-        }));
+        //    travel.tasks.push(travelTask);
+        //}));
   
         await travel.save();
 

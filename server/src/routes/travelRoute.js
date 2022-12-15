@@ -17,10 +17,10 @@ router.get("/:travelId", travelController.listTravelId)
 router.post("/create", travelController.createTravel)
 
 // rota para atualizar uma viagem por ID
-router.patch("/:travelId", travelController.updateTravelId)
+router.patch("/update/:travelId", travelController.updateTravelId)
 
 // rota para deletar uma viagem por ID
-router.delete("/:travelId", travelController.deleteTravelId)
+router.delete("/delete/:travelId", travelController.deleteTravelId)
 
 // Exportando as rotas
 module.exports = router
